@@ -1,3 +1,5 @@
+import csv
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -31,3 +33,62 @@ class Item:
         Применяет установленную скидку для конкретного товара.
         """
         self.price *= Item.pay_rate
+
+    def __str__(self):
+        return f"""Экземпляр класса Item:
+            Глобальные переменные:
+                pay_rate = {Item.pay_rate} | тип - float (скидка)
+                all = длина {len(Item.all)} | тип - list (содержит все созданные экземпляры класса)
+            Свойства экземпляра:
+                name = {self.__name} | тип - str (наименование товара)
+                price = {self.__price} | тип - float (цена товара)
+                quantity = {self.__quantity} | тип - int (кол-во товара)
+            Методы класса:
+                calculate_total_price - Рассчитывает общую стоимость конкретного товара в магазине.
+                apply_discount - Применяет установленную скидку для конкретного товара.               
+        """
+
+    @property
+    def name(self) -> str:
+        return self.__name
+
+    @name.setter
+    def name(self, new_name: str):
+        """А еще подрезаем имя до 10 знаков"""
+        if isinstance(new_name, str):
+            self.__name = new_name[:10]
+        else:
+            raise TypeError("Item.name must be str")
+
+    @property
+    def price(self) -> float:
+        return self.__price
+
+    @price.setter
+    def price(self, new_price: float) -> None:
+        if isinstance(new_price, float | int):
+            self.__price = new_price
+        else:
+            raise TypeError("Item.price must be float or int")
+
+    @property
+    def quantity(self) -> int:
+        return self.__quantity
+
+    @quantity.setter
+    def quantity(self, new_quantity: int) -> None:
+        if isinstance(new_quantity, int):
+            self.__quantity = new_quantity
+        else:
+            raise TypeError("Item.quantity must be int")
+
+    @classmethod
+    def instantiate_from_csv(cls, file_path: str) -> None:
+        with open(file_path, newline='') as csvfile:
+            item_list = csv.DictReader(csvfile)
+            for i in item_list:
+                Item(i.get("name"), Item.string_to_number(i.get("price")), Item.string_to_number(i.get("quantity")))
+
+    @classmethod
+    def string_to_number(cls, number_sting: str) -> int:
+        return int(float(number_sting))
