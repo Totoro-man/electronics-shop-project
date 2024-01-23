@@ -1,4 +1,6 @@
 import csv
+import os
+
 from src.csverrors import InstantiateCSVError
 
 
@@ -97,6 +99,8 @@ class Item:
         Преобразование данных из файла в список экземпляров класса Item
         :param file_path: путь к файлу данных
         """
+        Item.all.clear()
+        file_path = Item.normalize_path(file_path)
         try:
             with open(file_path, newline='') as csvfile:
                 item_list = csv.DictReader(csvfile)
@@ -120,6 +124,14 @@ class Item:
         :return: число
         """
         return int(float(number_sting))
+
+    @classmethod
+    def normalize_path(cls, file_path: str) -> str:
+        temp_path = os.getcwd()
+        list_path = temp_path.split("\\")
+        i = list_path.index("electronics-shop-project")
+        rel_path = "\\".join(list_path[:i+1])+"\\"+file_path
+        return os.path.abspath(rel_path)
 
     def __add__(self, other):
         """
