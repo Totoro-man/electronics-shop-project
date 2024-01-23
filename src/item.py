@@ -85,3 +85,9 @@ class Item:
     @classmethod
     def string_to_number(cls, number_sting: str) -> int:
         return int(float(number_sting))
+
+    def __add__(self, other):
+        if isinstance(other, Item):
+            return self.quantity + other.quantity
+        else:
+            raise TypeError("adding variable must be Item or Phone")
