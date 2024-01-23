@@ -1,5 +1,6 @@
 import csv
 
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -35,18 +36,10 @@ class Item:
         self.price *= Item.pay_rate
 
     def __str__(self):
-        return f"""Экземпляр класса Item:
-            Глобальные переменные:
-                pay_rate = {Item.pay_rate} | тип - float (скидка)
-                all = длина {len(Item.all)} | тип - list (содержит все созданные экземпляры класса)
-            Свойства экземпляра:
-                name = {self.__name} | тип - str (наименование товара)
-                price = {self.__price} | тип - float (цена товара)
-                quantity = {self.__quantity} | тип - int (кол-во товара)
-            Методы класса:
-                calculate_total_price - Рассчитывает общую стоимость конкретного товара в магазине.
-                apply_discount - Применяет установленную скидку для конкретного товара.               
-        """
+        return self.name
+
+    def __repr__(self):
+        return f"Item('{self.name}', {self.price}, {self.quantity})"
 
     @property
     def name(self) -> str:
