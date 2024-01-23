@@ -25,10 +25,16 @@ class Phone(Item):
 
     @number_of_sim.setter
     def number_of_sim(self, new_value: int):
-        if isinstance(new_value, int):
-            if new_value > 0:
-                self.__number_of_sim = new_value
-            else:
-                raise ValueError("Количество физических SIM-карт должно быть целым числом больше нуля.")
-        else:
-            raise TypeError("Item.number_of_sim must be int")
+        try:
+            if not isinstance(new_value, int):
+                raise TypeError("TypeError: Phone.number_of_sim must be int")
+            if new_value < 1:
+                raise ValueError("ValueError: Количество физических SIM-карт должно быть целым числом больше нуля.")
+            self.__number_of_sim = new_value
+        except ValueError as ve:
+            print(ve)
+        except TypeError as te:
+            print(te)
+
+
+

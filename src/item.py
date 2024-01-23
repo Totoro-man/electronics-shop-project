@@ -51,11 +51,13 @@ class Item:
 
     @name.setter
     def name(self, new_name: str):
-        if isinstance(new_name, str):
+        try:
+            if not isinstance(new_name, str):
+                raise TypeError("Item.name must be str")
             """А еще подрезаем имя до 10 знаков"""
             self.__name = new_name[:10]
-        else:
-            raise TypeError("Item.name must be str")
+        except TypeError as te:
+            print(te)
 
     """
     Getter|Setter для Item.__price
@@ -66,10 +68,12 @@ class Item:
 
     @price.setter
     def price(self, new_price: float) -> None:
-        if isinstance(new_price, float | int):
+        try:
+            if not isinstance(new_price, float | int):
+                raise TypeError("Item.price must be float or int")
             self.__price = new_price
-        else:
-            raise TypeError("Item.price must be float or int")
+        except TypeError as te:
+            print(te)
 
     """
     Getter|Setter для Item.__quantity
@@ -80,10 +84,12 @@ class Item:
 
     @quantity.setter
     def quantity(self, new_quantity: int) -> None:
-        if isinstance(new_quantity, int):
+        try:
+            if not isinstance(new_quantity, int):
+                raise TypeError("Item.quantity must be int")
             self.__quantity = new_quantity
-        else:
-            raise TypeError("Item.quantity must be int")
+        except TypeError as te:
+            print(te)
 
     @classmethod
     def instantiate_from_csv(cls, file_path: str) -> None:
@@ -100,9 +106,11 @@ class Item:
                         Item(i.get("name"), Item.string_to_number(i.get("price")),
                              Item.string_to_number(i.get("quantity")))
                 else:
-                    raise InstantiateCSVError("Файл items.csv поврежден")
+                    raise InstantiateCSVError("InstantiateCSVError: Файл items.csv поврежден")
         except FileNotFoundError:
-            raise FileNotFoundError("Отсутствует файл items.csv")
+            print("FileNotFoundError: Отсутствует файл items.csv")
+        except InstantiateCSVError as ice:
+            print(ice)
 
     @classmethod
     def string_to_number(cls, number_sting: str) -> int:

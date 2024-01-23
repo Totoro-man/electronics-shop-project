@@ -15,10 +15,12 @@ class Keyboard(ItemsMixIn, Item):
 
     @name.setter
     def name(self, new_name: str):
-        if isinstance(new_name, str):
+        try:
+            if not isinstance(new_name, str):
+                raise TypeError("TypeError: Item.name must be str")
             self.__name = new_name
-        else:
-            raise TypeError("Item.name must be str")
+        except TypeError as te:
+            print(te)
 
     def __repr__(self):
         return f"Keyboard('{self.name}', {self.price}, {self.quantity}, {self.language})"

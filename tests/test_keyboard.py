@@ -17,9 +17,6 @@ def test_name():
     kb.name = "Bla-bla-bla"
     assert kb.name == "Bla-bla-bla"
 
-    with pytest.raises(TypeError):
-        kb.name = 1
-
 
 def test__repr__():
     kb.name = "Dark Project KD87A"
