@@ -1,5 +1,6 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
 from src.item import Item
+from src.csverrors import InstantiateCSVError
 import pytest
 
 
@@ -20,13 +21,12 @@ def test_item_init(test_item):
     assert test_item_4.quantity == 4
     assert len(Item.all) == 4
 
-
-with pytest.raises(TypeError, match=".* str"):
-    Item(1, 1, 3)
-with pytest.raises(TypeError, match=".* float .*"):
-    Item("1", "1", 3)
-with pytest.raises(TypeError, match=".* int"):
-    Item("1", 1, 3.0)
+    with pytest.raises(TypeError, match=".* str"):
+        Item(1, 1, 3)
+    with pytest.raises(TypeError, match=".* float .*"):
+        Item("1", "1", 3)
+    with pytest.raises(TypeError, match=".* int"):
+        Item("1", 1, 3.0)
 
 
 def test_calculate_total_price(test_item):
@@ -56,6 +56,12 @@ def test_instantiate_from_csv():
     assert Item.all[0].name == "Смартфон"
     assert Item.all[1].price == 1000
     assert Item.all[2].quantity == 5
+
+    with pytest.raises(FileNotFoundError, match="Отсутствует .*"):
+        Item.instantiate_from_csv("xyz.csv")
+
+    with pytest.raises(InstantiateCSVError, match=".* поврежден"):
+        Item.instantiate_from_csv("src/xyz.csv")
 
 
 def test_string_to_number():

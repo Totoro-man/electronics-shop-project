@@ -1,4 +1,5 @@
 import csv
+from src.csverrors import InstantiateCSVError
 
 
 class Item:
@@ -41,18 +42,24 @@ class Item:
     def __repr__(self):
         return f"Item('{self.name}', {self.price}, {self.quantity})"
 
+    """
+    Getter|Setter для Item.__name
+    """
     @property
     def name(self) -> str:
         return self.__name
 
     @name.setter
     def name(self, new_name: str):
-        """А еще подрезаем имя до 10 знаков"""
         if isinstance(new_name, str):
+            """А еще подрезаем имя до 10 знаков"""
             self.__name = new_name[:10]
         else:
             raise TypeError("Item.name must be str")
 
+    """
+    Getter|Setter для Item.__price
+    """
     @property
     def price(self) -> float:
         return self.__price
@@ -64,6 +71,9 @@ class Item:
         else:
             raise TypeError("Item.price must be float or int")
 
+    """
+    Getter|Setter для Item.__quantity
+    """
     @property
     def quantity(self) -> int:
         return self.__quantity
@@ -77,16 +87,39 @@ class Item:
 
     @classmethod
     def instantiate_from_csv(cls, file_path: str) -> None:
-        with open(file_path, newline='') as csvfile:
-            item_list = csv.DictReader(csvfile)
-            for i in item_list:
-                Item(i.get("name"), Item.string_to_number(i.get("price")), Item.string_to_number(i.get("quantity")))
+        """
+        Преобразование данных из файла в список экземпляров класса Item
+        :param file_path: путь к файлу данных
+        """
+        try:
+            with open(file_path, newline='') as csvfile:
+                item_list = csv.DictReader(csvfile)
+                item_list = list(item_list)
+                if len(item_list[0]) == 3:
+                    for i in item_list:
+                        Item(i.get("name"), Item.string_to_number(i.get("price")),
+                             Item.string_to_number(i.get("quantity")))
+                else:
+                    raise InstantiateCSVError("Файл items.csv поврежден")
+        except FileNotFoundError:
+            raise FileNotFoundError("Отсутствует файл items.csv")
 
     @classmethod
     def string_to_number(cls, number_sting: str) -> int:
+        """
+        Преобразование число-строки в число
+        :param number_sting: число-строка
+        :return: число
+        """
         return int(float(number_sting))
 
     def __add__(self, other):
+        """
+        Сложение кол-ва предметов (quantity)
+        экземпляров класса Item и его наследников
+        :param other: экземпляр класса Item или его наследника
+        :return: число
+        """
         if isinstance(other, Item):
             return self.quantity + other.quantity
         else:
