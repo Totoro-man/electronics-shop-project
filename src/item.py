@@ -1,4 +1,6 @@
 import csv
+import os
+
 from src.csverrors import InstantiateCSVError
 
 
@@ -45,6 +47,7 @@ class Item:
     """
     Getter|Setter для Item.__name
     """
+
     @property
     def name(self) -> str:
         return self.__name
@@ -62,6 +65,7 @@ class Item:
     """
     Getter|Setter для Item.__price
     """
+
     @property
     def price(self) -> float:
         return self.__price
@@ -78,6 +82,7 @@ class Item:
     """
     Getter|Setter для Item.__quantity
     """
+
     @property
     def quantity(self) -> int:
         return self.__quantity
@@ -97,14 +102,16 @@ class Item:
         Преобразование данных из файла в список экземпляров класса Item
         :param file_path: путь к файлу данных
         """
+        cls.all.clear()
+        file_path = cls.normalize_path(file_path)
         try:
             with open(file_path, newline='') as csvfile:
                 item_list = csv.DictReader(csvfile)
                 item_list = list(item_list)
                 if len(item_list[0]) == 3:
                     for i in item_list:
-                        Item(i.get("name"), Item.string_to_number(i.get("price")),
-                             Item.string_to_number(i.get("quantity")))
+                        cls(i.get("name"), Item.string_to_number(i.get("price")),
+                            cls.string_to_number(i.get("quantity")))
                 else:
                     raise InstantiateCSVError("InstantiateCSVError: Файл items.csv поврежден")
         except FileNotFoundError:
@@ -112,14 +119,22 @@ class Item:
         except InstantiateCSVError as ice:
             print(ice)
 
-    @classmethod
-    def string_to_number(cls, number_sting: str) -> int:
+    @staticmethod
+    def string_to_number(number_sting: str) -> int:
         """
         Преобразование число-строки в число
         :param number_sting: число-строка
         :return: число
         """
         return int(float(number_sting))
+
+    @staticmethod
+    def normalize_path(file_path: str) -> str:
+        temp_path = os.getcwd()
+        list_path = temp_path.split("\\")
+        i = list_path.index("electronics-shop-project")
+        rel_path = "\\".join(list_path[:i + 1]) + "\\" + file_path
+        return os.path.abspath(rel_path)
 
     def __add__(self, other):
         """
