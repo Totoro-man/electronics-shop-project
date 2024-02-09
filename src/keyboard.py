@@ -21,6 +21,7 @@ class Keyboard(ItemsMixIn, Item):
             self.__name = new_name
         except TypeError as te:
             print(te)
+            Item.ExLog.append(f'Input value = {new_name}\n{te}')
 
     def __repr__(self):
         return f"Keyboard('{self.name}', {self.price}, {self.quantity}, {self.language})"

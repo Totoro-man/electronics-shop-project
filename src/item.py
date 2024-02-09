@@ -10,6 +10,7 @@ class Item:
     """
     pay_rate = 1.0
     all = []
+    ExLog = []
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """

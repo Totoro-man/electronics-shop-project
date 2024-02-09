@@ -16,6 +16,8 @@ def test_keyboard_init():
 def test_name():
     kb.name = "Bla-bla-bla"
     assert kb.name == "Bla-bla-bla"
+    kb.name = 0.55
+    assert kb.ExLog[-1] == "Input value = 0.55\nTypeError: Item.name must be str"
 
 
 def test__repr__():
