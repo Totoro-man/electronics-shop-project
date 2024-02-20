@@ -21,3 +21,5 @@ def test_name():
 def test__repr__():
     kb.name = "Dark Project KD87A"
     assert repr(kb) == "Keyboard('Dark Project KD87A', 9600, 5, EN)"
+    with pytest.raises(TypeError, match=".* str"):
+        kb.name = 100
